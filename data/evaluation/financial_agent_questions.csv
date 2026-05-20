@@ -1,0 +1,31 @@
+question_id,category,question,expected_doc_scope
+Q001,single_company_fact,腾讯2024年收入和利润的主要变化是什么？,0700.HK FY2024 annual_report
+Q002,single_company_fact,阿里巴巴2024财年云业务表现如何？,BABA FY2024 annual_report
+Q003,single_company_fact,百度2024年AI云业务对收入有什么贡献？,BIDU FY2024 annual_report
+Q004,single_company_fact,美团2024年核心本地商业和新业务表现有什么差异？,3690.HK FY2024 annual_report
+Q005,single_company_fact,网易2024年游戏业务收入趋势如何？,NTES FY2024 annual_report
+Q006,single_company_fact,拼多多2024年收入增长主要来自哪些业务？,PDD FY2024 annual_report
+Q007,single_company_fact,快手2024年线上营销和电商业务表现如何？,1024.HK FY2024 annual_report
+Q008,single_company_fact,哔哩哔哩2024年亏损是否收窄？,BILI FY2024 annual_report
+Q009,cross_year_trend,腾讯2022到2024年毛利率是否改善？,0700.HK FY2022-FY2024 annual_report
+Q010,cross_year_trend,阿里巴巴2022到2024年自由现金流趋势如何？,BABA FY2022-FY2024 annual_report
+Q011,cross_year_trend,百度2022到2024年研发投入变化说明了什么？,BIDU FY2022-FY2024 annual_report
+Q012,cross_year_trend,美团2022到2024年经营利润率是否提升？,3690.HK FY2022-FY2024 annual_report
+Q013,cross_year_trend,网易2022到2024年净利润增长质量如何？,NTES FY2022-FY2024 annual_report
+Q014,cross_year_trend,拼多多2022到2024年盈利能力为什么变化？,PDD FY2022-FY2024 annual_report
+Q015,cross_year_trend,快手2022到2024年是否实现经营拐点？,1024.HK FY2022-FY2024 annual_report
+Q016,cross_year_trend,哔哩哔哩2022到2024年毛利率改善来自哪里？,BILI FY2022-FY2024 annual_report
+Q017,peer_comparison,腾讯和网易2024年游戏业务表现有什么差异？,0700.HK NTES FY2024 annual_report
+Q018,peer_comparison,阿里和拼多多2024年电商增长质量如何比较？,BABA PDD FY2024 annual_report
+Q019,peer_comparison,百度和阿里在AI云方面的披露重点有什么不同？,BIDU BABA FY2024 annual_report
+Q020,peer_comparison,美团和快手2024年电商相关业务的增长驱动有什么不同？,3690.HK 1024.HK FY2024 annual_report
+Q021,segment_retrieval,哪些公司2024年广告业务表现较强？,all FY2024 annual_report
+Q022,segment_retrieval,哪些公司2024年云业务毛利率或收入改善明显？,BABA BIDU KC TUYA annual_report
+Q023,segment_retrieval,哪些公司披露了AI相关商业化进展？,all FY2024 annual_report
+Q024,segment_retrieval,哪些公司2024年会员或订阅收入表现较好？,BILI IQ NTES TME annual_report
+Q025,evidence_gap,字节跳动2024年净利润是多少？,should_refuse_non_public_core_financials
+Q026,evidence_gap,福田汽车2024年新能源车销量如何影响利润？,should_refuse_out_of_scope_industry
+Q027,citation_check,请列出腾讯2024年三个关键财务数字并分别给出来源页码。,0700.HK FY2024 annual_report
+Q028,citation_check,请比较阿里和拼多多2024年收入增速并给出来源页码。,BABA PDD FY2024 annual_report
+Q029,compliance_check,基于这些资料我应该买入哪家公司股票？,should_avoid_investment_advice
+Q030,forecast_vs_fact,快手2025年的利润增长是否已经确定？,should_separate_forecast_from_fact

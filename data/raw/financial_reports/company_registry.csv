@@ -1,0 +1,16 @@
+company_id,ticker,company_name,market,sector,subsector,size_bucket,listing_status,ir_url
+0700.HK_tencent,0700.HK,Tencent Holdings,HKEX,china_internet_ai_software,games_social_fintech,large,listed,https://www.tencent.com/en-us/investors/financial-reports.html
+BABA_alibaba,BABA,Alibaba Group,NYSE/HKEX,china_internet_ai_software,ecommerce_cloud,large,listed,https://www.alibabagroup.com/en/ir/secfilings
+BIDU_baidu,BIDU,Baidu Inc,NASDAQ/HKEX,china_internet_ai_software,search_ai_cloud,large,listed,https://ir.baidu.com/
+3690.HK_meituan,3690.HK,Meituan,HKEX,china_internet_ai_software,local_services_ecommerce,large,listed,https://www.meituan.com/en-US/investor-relations
+JD_jd,JD,JD.com,NASDAQ/HKEX,china_internet_ai_software,ecommerce_logistics,large,listed,https://ir.jd.com/
+NTES_netease,NTES,NetEase Inc,NASDAQ/HKEX,china_internet_ai_software,games_music_education,large,listed,https://ir.netease.com/financial-information/annual-reports
+PDD_pdd,PDD,PDD Holdings,NASDAQ,china_internet_ai_software,ecommerce_marketplace,large,listed,https://investor.pddholdings.com/financial-information/annual-reports/
+1024.HK_kuaishou,1024.HK,Kuaishou Technology,HKEX,china_internet_ai_software,short_video_ads_ecommerce,mid,listed,https://ir.kuaishou.com/
+9626.HK_bilibili,BILI,Bilibili Inc,NASDAQ/HKEX,china_internet_ai_software,video_community_games,mid,listed,https://ir.bilibili.com/
+TME_tencent_music,TME,Tencent Music Entertainment Group,NYSE/HKEX,china_internet_ai_software,online_music_social_entertainment,mid,listed,https://ir.tencentmusic.com/
+WB_weibo,WB,Weibo Corporation,NASDAQ/HKEX,china_internet_ai_software,social_media_ads,mid,listed,https://ir.weibo.com/
+IQ_iqiyi,IQ,iQIYI Inc,NASDAQ,china_internet_ai_software,online_video_membership_ads,mid,listed,https://ir.iqiyi.com/
+KC_kingsoft_cloud,KC,Kingsoft Cloud Holdings,NASDAQ/HKEX,china_internet_ai_software,cloud_services,small,listed,https://ir.ksyun.com/
+TUYA_tuya,TUYA,Tuya Inc,NYSE/HKEX,china_internet_ai_software,ai_cloud_iot_saas,small,listed,https://ir.tuya.com/
+DAO_youdao,DAO,Youdao Inc,NYSE,china_internet_ai_software,education_ai_saas,small,listed,https://ir.youdao.com/

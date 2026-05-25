@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import re
 
+from ingestion.schema import Chunk
 from knowledge import get_noise_patterns, get_metrics, resolve_metrics_from_query, get_chinese_digit_map
 from rag.bm25_store import tokenize
+from rag.citation import EvidenceCard
 
 
 class ContextCompressor:
@@ -49,6 +51,14 @@ class ContextCompressor:
 
         sentences = [s.strip() for s in re.split(r"(?<=[。！？；;])\s*|\n+", text) if s.strip()]
         metadata_prefixes = (
+            "#",
+            "文档类型",
+            "研究机构",
+            "发布日期",
+            "公司：",
+            "股票代码",
+            "会议日期",
+            "报告期",
         )
         sentences = [
             sentence
@@ -140,6 +150,27 @@ class ContextCompressor:
         metric = self._metric_label(metric_line)
         unit_text = f"，单位：{unit}" if unit else ""
         return f"表格解读：{target_year}年{metric}对应数值为 {value}{unit_text}。"
+
+    def _target_year(self, query: str) -> str:
+        match = re.search(r"(20\d{2})\s*年?", query)
+        return match.group(1) if match else ""
+
+    def _find_year_line(self, lines: list[str]) -> str:
+        for line in lines:
+            if len(self._extract_years(line)) >= 2:
+                return line
+        return ""
+
+    def _extract_years(self, line: str) -> list[str]:
+        years = re.findall(r"(20\d{2})\s*年?", line)
+        cn_years = re.findall(r"二[零〇][零〇一二三四五六七八九]{2}年", line)
+        cn_map = get_chinese_digit_map()
+        table = str.maketrans(cn_map)
+        for item in cn_years:
+            digits = item[:-1].translate(table)
+            if re.fullmatch(r"20\d{2}", digits):
+                years.append(digits)
+        return years
 
     def _find_unit(self, lines: list[str]) -> str:
         for line in lines:

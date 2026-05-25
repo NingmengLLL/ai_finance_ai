@@ -39,8 +39,7 @@ class DenseSearchStep(RetrievalStep):
         hits = self.vector_store.search(dense_query, top_k=top_k, metadata_filter=metadata_filter)
         context["dense_hits"] = hits
         for chunk, score in hits:
-            entry = context["merged"].setdefault(chunk.chunk_id,
-                                                 {"chunk": chunk, "dense_score": 0.0, "bm25_score": 0.0})
+            entry = context["merged"].setdefault(chunk.chunk_id, {"chunk": chunk, "dense_score": 0.0, "bm25_score": 0.0})
             entry["dense_score"] = max(entry["dense_score"], score)
         return list(context["merged"].values())
 
@@ -61,8 +60,7 @@ class BM25SearchStep(RetrievalStep):
         context["bm25_hits"] = hits
         max_bm25 = max([score for _, score in hits], default=0.0) or 1.0
         for chunk, score in hits:
-            entry = context["merged"].setdefault(chunk.chunk_id,
-                                                 {"chunk": chunk, "dense_score": 0.0, "bm25_score": 0.0})
+            entry = context["merged"].setdefault(chunk.chunk_id, {"chunk": chunk, "dense_score": 0.0, "bm25_score": 0.0})
             entry["bm25_score"] = max(entry["bm25_score"], score / max_bm25)
         return list(context["merged"].values())
 
@@ -78,6 +76,18 @@ class RerankStep(RetrievalStep):
         reranked = self.reranker.rerank(rerank_query, candidates, top_n=top_n)
         context["reranked"] = reranked
         return reranked
+
+
+class CompressStep(RetrievalStep):
+    def __init__(self, compressor: ContextCompressor):
+        self.compressor = compressor
+
+    def run(self, query: str, candidates: list[dict[str, Any]], context: dict[str, Any]) -> list[dict[str, Any]]:
+        # Compress使用原始query做句子评分
+        original_query = context.get("original_query", query)
+        cards = self.compressor.compress(original_query, candidates)
+        context["evidence_cards"] = cards
+        return candidates
 
 
 class RetrievalPipeline:
@@ -99,7 +109,7 @@ class RetrievalPipeline:
 
 class HybridRetriever:
     """Backward-compatible facade over RetrievalPipeline.
-
+    
     核心改造：双通道检索策略
     - Dense通道使用 augment_query_for_retrieval（语义丰富，提升向量匹配召回）
     - BM25通道使用 normalize_query_for_metadata_filter（精准关键词，保证词汇匹配）
@@ -134,9 +144,9 @@ class HybridRetriever:
             "top_k": top_k,
             "top_n": top_n,
             "metadata_filter": metadata_filter,
-            "original_query": query,  # 原始query，给Rerank/Compress用
-            "bm25_query": bm25_query,  # BM25精准关键词query
-            "dense_query": dense_query,  # Dense语义增强query
+            "original_query": query,          # 原始query，给Rerank/Compress用
+            "bm25_query": bm25_query,          # BM25精准关键词query
+            "dense_query": dense_query,         # Dense语义增强query
             "merged": {},
         }
 

@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 import math
 import re
@@ -5,8 +6,13 @@ from collections import Counter, defaultdict
 
 import jieba
 
+from ingestion.schema import Chunk
+from rag.query_filters import matches_metadata_filter
+
+
 TOKEN_PATTERN = re.compile(r"[A-Za-z0-9_.%+-]+|[\u4e00-\u9fff]+")
 CHINESE_PATTERN = re.compile(r"^[\u4e00-\u9fff]+$")
+
 
 def tokenize(text: str) -> list[str]:
     tokens: list[str] = []

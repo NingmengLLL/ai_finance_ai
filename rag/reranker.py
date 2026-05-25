@@ -9,6 +9,8 @@ os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
 
 from rag.bm25_store import tokenize
 from utils.config_handler import model_cof, rag_cof
+from utils.helpers import as_bool
+from utils.logger_handler import logger
 
 
 def _score_weight(name: str, default: float) -> float:
@@ -135,3 +137,24 @@ class LocalReranker:
         candidates.sort(key=lambda item: item["final_score"], reverse=True)
         return candidates[:top_n]
 
+    def _fallback_rerank(self, query: str, candidates: list[dict], top_n: int) -> list[dict]:
+        dense_weight = _score_weight("dense_weight", 0.35)
+        bm25_weight = _score_weight("bm25_weight", 0.35)
+        rerank_weight = _score_weight("rerank_weight", 0.30)
+        retrieval_weight = max(0.0, dense_weight + bm25_weight)
+        total_weight = retrieval_weight + max(0.0, rerank_weight)
+        total_weight = total_weight or 1.0
+
+        for candidate in candidates:
+            chunk = candidate["chunk"]
+            retrieval_score = max(candidate.get("dense_score", 0.0), candidate.get("bm25_score", 0.0))
+            candidate["retrieval_score"] = retrieval_score
+            candidate["rerank_score"] = self.score(query, chunk.text, chunk.metadata | {"doc_type": chunk.doc_type})
+            candidate["final_score"] = (
+                retrieval_weight * retrieval_score + rerank_weight * candidate.get("rerank_score", 0.0)
+            ) / total_weight
+            candidate["rerank_provider"] = "local_fallback"
+            if self._model_error:
+                candidate["rerank_error"] = self._model_error
+        candidates.sort(key=lambda item: item["final_score"], reverse=True)
+        return candidates[:top_n]

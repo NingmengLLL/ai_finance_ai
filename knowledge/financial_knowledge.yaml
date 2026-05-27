@@ -1,0 +1,221 @@
+# ============================================================
+# financial_knowledge.yaml — 统一知识中枢
+# 所有模块的领域知识统一在此维护，代码只做"查询"不做"硬编码"
+# 新增一家公司/一个指标/一种意图：只需在此加一条记录
+# ============================================================
+
+# ── 公司知识（原散落于 query_filters + entity_extractor + metadata_registry）──
+companies:
+  0700.HK_tencent:
+    aliases: [腾讯, 腾讯控股, Tencent, Tencent Holdings, 0700.HK]
+    industry: 互联网服务
+    sector: china_internet_ai_software
+    tickers: [0700.HK]
+
+  3690.HK_meituan:
+    aliases: [美团, 美团-W, Meituan, 3690.HK]
+    industry: 本地生活服务
+    sector: china_internet_ai_software
+    tickers: [3690.HK]
+
+  1024.HK_kuaishou:
+    aliases: [快手, 快手-W, Kuaishou, Kuaishou Technology, 1024.HK]
+    industry: 短视频与直播
+    sector: china_internet_ai_software
+    tickers: [1024.HK]
+
+  BABA_alibaba:
+    aliases: [阿里, 阿里巴巴, Alibaba, Alibaba Group, BABA]
+    industry: 电子商务
+    sector: china_internet_ai_software
+    tickers: [BABA]
+
+  BIDU_baidu:
+    aliases: [百度, Baidu, Baidu Inc, BIDU]
+    industry: 互联网搜索与AI
+    sector: china_internet_ai_software
+    tickers: [BIDU]
+
+  NTES_netease:
+    aliases: [网易, NetEase, NetEase Inc, NTES]
+    industry: 互联网游戏
+    sector: china_internet_ai_software
+    tickers: [NTES]
+
+  PDD_pdd:
+    aliases: [拼多多, PDD, PDD Holdings]
+    industry: 电子商务
+    sector: china_internet_ai_software
+    tickers: [PDD]
+
+  9626.HK_bilibili:
+    aliases: [哔哩哔哩, B站, Bilibili, Bilibili Inc, BILI, 9626.HK]
+    industry: 视频娱乐
+    sector: china_internet_ai_software
+    tickers: [9626.HK, BILI]
+
+
+# ── 行业分类体系（原散落于 query_filters 的 INDUSTRY_NAME_MAPPING）──
+industries:
+  互联网服务:
+    aliases: [互联网, 科技, IT, 互联网服务]
+    companies: [0700.HK_tencent]
+
+  本地生活服务:
+    aliases: [本地生活, 外卖, 本地生活服务]
+    companies: [3690.HK_meituan]
+
+  短视频与直播:
+    aliases: [短视频, 直播, 短视频与直播]
+    companies: [1024.HK_kuaishou]
+
+  电子商务:
+    aliases: [电商, 购物, 电子商务]
+    companies: [BABA_alibaba, PDD_pdd]
+
+  互联网搜索与AI:
+    aliases: [搜索, AI, 人工智能, 互联网搜索与AI]
+    companies: [BIDU_baidu]
+
+  互联网游戏:
+    aliases: [游戏, 网游, 互联网游戏]
+    companies: [NTES_netease]
+
+  视频娱乐:
+    aliases: [视频, 动漫, 二次元, 视频娱乐]
+    companies: [9626.HK_bilibili]
+
+
+# ── 文档类型（原散落于 query_filters 的 DOC_TYPE_ALIASES）──
+doc_types:
+  annual_report:
+    aliases: [年报, 年度报告, annual_report]
+  quarterly_results:
+    aliases: [季报, 季度报告, quarterly_results, 季报业绩, 业绩公告]
+  research_report:
+    aliases: [研报, 研究报告, research_report]
+
+
+# ── 意图关键词（原散落于 router_node.py）──
+intents:
+  realtime_financial_search:
+    keywords: [今天, 最新, 新闻, 实时, 股价, 公告, 监管]
+  calculation:
+    keywords: [计算, 多少倍, 同比, 增长率, CAGR, 市盈率, 敏感性]
+  graph_reasoning:
+    keywords: [关系, 上下游, 供应商, 客户, 影响, 产业链]
+  financial_analysis:
+    keywords: []   # 默认兜底意图，无需关键词
+
+
+# ── 金融指标知识（原散落于 entity_extractor + context_compressor + query_transform + calculator）──
+metrics:
+  营收:
+    synonyms: [收入, 营业收入, 总收入, revenue]
+    related: [毛利率, 净利润]
+    unit: 亿元
+    search_terms: [收入, 总收入, 营业收入]
+    regex_patterns:
+      - "20(2[2-5])年[^。\\n]*?营业收入(?:为)?([0-9.]+)亿元"
+
+  净利润:
+    synonyms: [利润, 盈利, 溢利, 归母净利润, net profit]
+    related: [营收, 毛利率, 费用率]
+    unit: 亿元
+    search_terms: [经营盈利, 年度盈利, 净利润, 溢利]
+
+  毛利率:
+    synonyms: [毛利, 毛利率, gross margin]
+    related: [营收, 净利润]
+    unit: "%"
+    search_terms: [毛利率, 毛利及毛利率]
+
+  现金流:
+    synonyms: [现金流量, 经营现金流, 自由现金流, cash flow]
+    related: [净现比, 应收账款周转]
+    unit: 亿元
+    search_terms: [现金流量, 经营活动所得现金, 经营现金流]
+    expansion_terms: [经营活动现金流量净额, 自由现金流, 净现比, 应收账款周转]
+
+  估值:
+    synonyms: [市盈率, PE, 估值, valuation]
+    related: [盈利预测, 市值]
+    unit: x
+    search_terms: [市盈率, PE, 估值]
+    expansion_terms: [市盈率, 盈利预测, 市值, 估值假设]
+
+  风险:
+    synonyms: [风险提示, 风险因素]
+    related: [预算波动, 成本变化, 竞争加剧]
+    expansion_terms: [风险提示, 预算波动, 成本变化, 竞争加剧]
+
+  市盈率:
+    synonyms: [PE, 估值, 多少倍]
+    unit: x
+    regex_patterns:
+      - "市值(?:为)?([0-9.]+)亿元"
+      - "净利润(?:为)?([0-9.]+)亿元"
+
+  营业收入:
+    synonyms: [营收, 收入, 总收入]
+    search_terms: [收入, 总收入, 营业收入]
+
+  ROE:
+    synonyms: [净资产收益率, Return on Equity]
+
+  资产负债率:
+    synonyms: [负债率, leverage ratio]
+
+  自由现金流:
+    synonyms: [FCF, free cash flow]
+    search_terms: [现金流量, 经营活动所得现金, 经营现金流]
+
+
+# ── 计算模板（原散落于 calculator_node.py）──
+calc_templates:
+  revenue_yoy:
+    trigger_keywords: [同比, 增长率, CAGR, 增速]
+    description: 营业收入同比增长率
+    formula_template: "(new - old) / old * 100"
+    metric_label: 营业收入同比
+    unit: "%"
+
+  pe_ratio:
+    trigger_keywords: [市盈率, PE, 估值, 多少倍]
+    description: 市盈率 = 市值 / 净利润
+    formula_template: "market_cap / net_profit"
+    metric_label: 市盈率
+    unit: x
+
+
+# ── 关系模板（原散落于 relation_extractor.py）──
+relation_templates:
+  - head: 云资源成本
+    relation: 影响
+    tail: 毛利率
+  - head_pattern: "公司"
+    relation: 披露指标
+    tail_pattern: "指标"
+
+
+# ── 压缩器噪声模式（原散落于 context_compressor.py）──
+noise_patterns:
+  - 免责声明
+  - 重要声明
+  - 目录
+  - 本报告仅供
+
+
+# ── 中文数字映射（原散落于 context_compressor.py）──
+chinese_digit_map:
+  零: "0"
+  〇: "0"
+  一: "1"
+  二: "2"
+  三: "3"
+  四: "4"
+  五: "5"
+  六: "6"
+  七: "7"
+  八: "8"
+  九: "9"

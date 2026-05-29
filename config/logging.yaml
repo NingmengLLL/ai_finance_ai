@@ -1,0 +1,4 @@
+logging_enabled: true
+log_level: INFO
+log_llm_payload: false
+log_retrieval_details: true

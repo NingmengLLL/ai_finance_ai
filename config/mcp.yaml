@@ -1,0 +1,35 @@
+# ── MCP Client 配置：金融 Agent 作为 MCP Client 接入外部工具 ──
+# 每个server对应一个MCP工具集，web_search_node按需连接
+
+servers:
+  # AKShare：A股实时行情、财务指标、公告
+  akshare:
+    transport: stdio
+    command: python
+    args:
+      - "-m"
+      - "akshare_mcp"
+    enabled: true
+    description: "A股实时行情与财务数据（AKShare）"
+
+  # Brave Search：通用网页搜索（新闻、公告、研报动态）
+  # 需先设置 BRAVE_API_KEY 环境变量或填入 env 字段
+  brave_search:
+    transport: stdio
+    command: npx
+    args:
+      - "-y"
+      - "@anthropic-ai/mcp-server-brave-search"
+    env:
+      BRAVE_API_KEY: ""          # 需用户填入自己的 Brave Search API Key
+    enabled: false               # 默认关闭，需API Key才能启用
+    description: "通用网页搜索（Brave Search）"
+
+# web_search_node 的行为控制
+web_search:
+  # MCP工具调用模式：mcp_client（调MCP Server）或 placeholder（旧逻辑）
+  mode: mcp_client
+  # 搜索结果最大条数
+  max_results: 5
+  # 结果注入到 evidence_cards 还是单独字段
+  inject_to_evidence: true

@@ -1,0 +1,3 @@
+external_data_path: data/external/records.csv
+# default_user_id 已废弃——现在通过Streamlit登录页传入真实user_id
+max_reflection_rounds: 2

@@ -1,0 +1,28 @@
+# ── 主模型（深度推理、复杂生成）──
+chat_provider: dashscope_compatible
+chat_model_name: qwen3-vl-32b-thinking
+chat_base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+# Qwen3系列thinking模式控制：
+#   false = 关闭深度推理，加速响应（推荐日常使用）
+#   true  = 开启深度思考，推理更深入但响应慢（复杂多跳推理场景）
+enable_thinking: false
+#fast_model_api_key: sk-246b546797c646a984649bf2592c7bf7
+
+# ── 快模型（分类、提取、改写、质量判定）──
+# 用于 router/query_transform/calculator/critic 等快速任务
+# 典型选用：低成本高速度模型如 deepseek-v4-flash、qwen-turbo
+# 如果不配置 fast_model 段，快模型会 fallback 到主模型（即单模型模式）
+fast_model_provider: dashscope_compatible
+fast_model_name: qwen3-vl-32b-thinking
+fast_model_base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+# fast_model_api_key: 如果快模型使用不同API密钥，在此配置；否则共用主模型的DASHSCOPE_API_KEY
+
+# ── Embedding模型 ──
+embedding_provider: dashscope_compatible
+embedding_model_name: text-embedding-v4
+embedding_base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+embedding_chunk_size: 8
+rerank_provider: local_cross_encoder
+rerank_model_name: E:\迅雷下载\bge-reranker-base
+# 可以加上下面这行，确保不强制离线
+rerank_local_files_only: true

@@ -1,0 +1,9 @@
+collection_name: financial_agent
+persist_directory: data/indexes/chroma_db
+retriever_k: 8
+data_path: data/raw
+md5_hex_store: data/indexes/md5.txt
+allow_knowledge_file_type: ["txt", "md", "pdf", "csv"]
+chunk_size: 1200
+chunk_overlap: 120
+separators: ["\n\n", "\n", "。", "；", ".", ";", " ", ""]

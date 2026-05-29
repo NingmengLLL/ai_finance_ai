@@ -1,0 +1,7 @@
+main_prompt_path: prompts/system_prompt.txt
+rag_summary_prompt_path: prompts/rag_summarize.txt
+report_prompt_path: prompts/analyst_prompt.txt
+query_rewrite_prompt_path: prompts/query_rewrite_prompt.txt
+hyde_prompt_path: prompts/hyde_prompt.txt
+critic_prompt_path: prompts/critic_prompt.txt
+citation_prompt_path: prompts/citation_prompt.txt

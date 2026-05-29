@@ -1,0 +1,14 @@
+short_term_window: 8
+heartbeat_message_threshold: 12
+heartbeat_char_threshold: 16000
+profile_store_path: data/processed/user_profiles.json
+conversation_store_path: data/processed/conversations
+
+# ── Redis存储配置（生产环境首选，Redis不可用时自动降级到Disk） ──
+redis:
+  enabled: false          # 改为true启用Redis后端
+  host: localhost
+  port: 6379
+  db: 0
+  password: ""            # 留空=无密码
+  timeout: 5.0

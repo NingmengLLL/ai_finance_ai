@@ -1,0 +1,21 @@
+data_path: data/raw/financial_reports
+processed_path: data/processed/financial_reports_chunks.jsonl
+index_path: data/indexes
+require_document_registry: true
+auto_register_local_files: true
+retriever_k: 8
+rerank_top_n: 6
+rerank_batch_size: 8
+rerank_max_length: 512
+rerank_local_files_only: true
+chunk_max_chars: 1200
+chunk_overlap_chars: 120
+enable_hyde: true
+enable_query_rewrite: true   # 是否查询改写，
+enable_sub_queries: true
+enable_graph_rag: true
+enable_llm_router: true   # 是否启用LLM意图分类+实体抽取（false=关键词fast-path）
+enable_llm_calculator: true  # 是否启用LLM数值计算（false=regex模板fallback）
+dense_weight: 0.35
+bm25_weight: 0.35
+rerank_weight: 0.30

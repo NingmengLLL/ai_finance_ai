@@ -1,0 +1,4 @@
+enable_web_fallback: false
+enable_critic: false
+enable_citation_guard: true
+max_reflection_rounds: 2

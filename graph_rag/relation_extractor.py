@@ -30,4 +30,23 @@ def extract_relations(chunks: list[Chunk]) -> list[dict]:
                     }
                 )
 
+        # ── 固定模板：从 knowledge YAML 读取 ──
+        for template in templates:
+            head = template.get("head", "")
+            relation = template.get("relation", "")
+            tail = template.get("tail", "")
+            # 只有 head 和 tail 都有值（非pattern），才做精确匹配
+            if head and tail and not template.get("head_pattern") and not template.get("tail_pattern"):
+                if head in chunk.text and tail in chunk.text:
+                    relations.append(
+                        {
+                            "head": head,
+                            "relation": relation,
+                            "tail": tail,
+                            "source_file": chunk.metadata.get("file_name", chunk.source_file),
+                            "page_number": chunk.page_start,
+                            "chunk_id": chunk.chunk_id,
+                        }
+                    )
+
     return relations

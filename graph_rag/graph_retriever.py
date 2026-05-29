@@ -11,4 +11,17 @@ class GraphRetriever:
         chunks = read_chunks()
         self.graph = GraphStore(extract_relations(chunks))
 
-
+    def retrieve(self, query: str) -> list[dict]:
+        entities = extract_entities(query)
+        seeds = entities.get("companies", []) + entities.get("metrics", [])
+        relations: list[dict] = []
+        for seed in seeds:
+            relations.extend(self.graph.neighbors(seed))
+        seen = set()
+        unique = []
+        for relation in relations:
+            key = (relation["head"], relation["relation"], relation["tail"], relation.get("chunk_id"))
+            if key not in seen:
+                unique.append(relation)
+                seen.add(key)
+        return unique[:12]

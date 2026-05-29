@@ -10,3 +10,15 @@ class GraphStore:
         for relation in self.relations:
             self.add_relation(relation)
 
+    def add_relation(self, relation: dict) -> None:
+        self.adj[relation["head"]].append(relation)
+        reverse = {
+            **relation,
+            "head": relation["tail"],
+            "tail": relation["head"],
+            "relation": f"反向:{relation['relation']}",
+        }
+        self.adj[relation["tail"]].append(reverse)
+
+    def neighbors(self, entity: str, limit: int = 8) -> list[dict]:
+        return self.adj.get(entity, [])[:limit]

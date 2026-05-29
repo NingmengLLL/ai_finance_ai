@@ -55,6 +55,11 @@ def _fallback_reasoning(state: FinancialAgentState, error: str | None = None) ->
                 f"【来源：{relation.get('source_file')}，{page}】"
             )
 
+    lines.append("")
+    lines.append("分析判断：")
+    lines.append(
+        "综合已检索证据，若多个证据均指向同一趋势，可作为研究判断；若证据来自预测或管理层展望，应视为假设而非既成事实。"
+    )
     if web_note:
         lines.append(web_note)
     lines.append(compliance_cof.get("risk_disclaimer", "以上内容不构成投资建议。"))

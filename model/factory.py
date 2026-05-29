@@ -22,6 +22,23 @@ class SimpleMessage:
     content: str
 
 
+class SimpleChatModel:
+    """Deterministic fallback used when LangChain providers are unavailable."""
+
+    def __init__(self, model: str = "local-rule-based"):
+        self.model = model
+
+    def invoke(self, prompt: Any) -> SimpleMessage:
+        text = prompt if isinstance(prompt, str) else str(prompt)
+        return SimpleMessage(
+            content=(
+                "当前环境未安装在线大模型依赖，已启用本地规则模型。"
+                "安装 requirements.txt 后可接入真实 LLM。\n\n"
+                f"输入摘要：{text[:500]}"
+            )
+        )
+
+
 class SimpleEmbeddings:
     """Small hashing embedding fallback with the LangChain embedding interface."""
 
@@ -105,6 +122,23 @@ class ChatModelFactory(BaseModelFactory):
             enable_thinking = enable_thinking.lower() in ("true", "1", "yes")
         return _build_chat_model(provider, model_name, base_url, api_key, enable_thinking=enable_thinking)
 
+# ── 快模型（分类、提取、结构化输出）──
+
+class FastChatModelFactory(BaseModelFactory):
+    """快模型工厂：独立配置的轻量级LLM，用于意图路由、实体抽取、query改写等快速任务。
+    典型选用：deepseek-v4-flash、qwen-turbo 等低成本高速度模型。"""
+
+    def generator(self) -> Any:
+        # 快模型配置：优先读fast_model段，fallback到主模型配置
+        provider = model_cof.get("fast_model_provider", model_cof.get("chat_provider", "dashscope_compatible"))
+        model_name = model_cof.get("fast_model_name", model_cof.get("chat_model_name", "qwen3-max"))
+        base_url = model_cof.get("fast_model_base_url", model_cof.get("chat_base_url"))
+        # 快模型可能用不同的API key（如DeepSeek的key），如果没配则共用主模型的key
+        api_key = model_cof.get("fast_model_api_key") or None
+        # 快模型始终关闭thinking（分类/提取任务不需要深度推理）
+        enable_thinking = False
+        return _build_chat_model(provider, model_name, base_url, api_key, enable_thinking=enable_thinking)
+
 
 class EmbeddingsFactory(BaseModelFactory):
     def generator(self) -> Any:
@@ -182,4 +216,5 @@ class _LazyModel:
 
 
 chat_model = _LazyModel(ChatModelFactory)      # 主模型：深度推理（reasoning_node）
+fast_model = _LazyModel(FastChatModelFactory)   # 快模型：分类/提取/改写（router/query_transform/calculator/critic）
 embed_model = _LazyModel(EmbeddingsFactory)

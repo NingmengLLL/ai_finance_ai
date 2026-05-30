@@ -93,3 +93,379 @@ def run_streamlit() -> None:
             """,
             unsafe_allow_html=True,
         )
+
+def inject_chat_css() -> None:
+    import streamlit as st
+
+    st.markdown(
+        """
+        <style>
+        :root {
+            --app-bg: #f7f3ec;
+            --panel-bg: rgba(255, 255, 255, 0.86);
+            --panel-strong: #ffffff;
+            --border: #e7dece;
+            --text-main: #2f2b25;
+            --text-soft: #8d8376;
+            --accent: #c9843d;
+            --accent-soft: #f4e1cc;
+            --shadow: 0 16px 40px rgba(67, 50, 30, 0.08);
+        }
+
+        html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"] {
+            background:
+                radial-gradient(circle at top right, rgba(237, 214, 189, 0.58), transparent 30%),
+                linear-gradient(180deg, #fbfaf7 0%, var(--app-bg) 100%);
+            color: var(--text-main);
+            font-family: "Avenir Next", "Segoe UI", sans-serif;
+        }
+
+        header[data-testid="stHeader"] {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        #MainMenu, footer {
+            visibility: hidden;
+        }
+
+        section[data-testid="stSidebar"][aria-expanded="true"] {
+            min-width: 18rem;
+            width: 18rem !important;
+        }
+
+        [data-testid="stSidebar"] {
+            background: rgba(255, 255, 255, 0.74);
+            border-right: 1px solid rgba(231, 222, 206, 0.9);
+            backdrop-filter: blur(18px);
+        }
+
+        [data-testid="stSidebar"] > div:first-child {
+            padding-top: 1.2rem;
+        }
+
+        [data-testid="stSidebar"] button {
+            border-radius: 14px;
+        }
+
+        [data-testid="stSidebar"] .stButton > button[kind="secondary"] {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        [data-testid="stSidebar"] .stButton > button[kind="primary"] {
+            background: linear-gradient(180deg, #fff6ea 0%, #f4e1cc 100%);
+            border: 1px solid rgba(201, 132, 61, 0.28);
+            color: #7b552f;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-bottom: 1rem;
+        }
+
+        .brand-mark {
+            width: 1.85rem;
+            height: 1.85rem;
+            border-radius: 0.65rem;
+            background: linear-gradient(145deg, #e3a361 0%, #c9843d 100%);
+            box-shadow: 0 12px 24px rgba(201, 132, 61, 0.22);
+        }
+
+        .brand-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.05rem;
+        }
+
+        .brand-title {
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .brand-meta {
+            font-size: 0.74rem;
+            color: var(--text-soft);
+        }
+
+        .section-label {
+            margin: 1rem 0 0.5rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+        }
+
+        .recent-meta,
+        .sidebar-empty {
+            font-size: 0.78rem;
+            color: var(--text-soft);
+            margin: 0.15rem 0 0.55rem 0.1rem;
+        }
+
+        .sidebar-footer {
+            margin-top: 1.4rem;
+            padding-top: 0.9rem;
+            border-top: 1px solid rgba(231, 222, 206, 0.85);
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(231, 222, 206, 0.95);
+            color: var(--text-soft);
+            font-size: 0.8rem;
+        }
+
+        .footer-dot {
+            width: 0.48rem;
+            height: 0.48rem;
+            border-radius: 999px;
+            background: #63ba7e;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.65rem;
+            padding: 0.2rem 0 0.8rem;
+        }
+
+        .topbar .brand-mark {
+            width: 1.1rem;
+            height: 1.1rem;
+            border-radius: 0.4rem;
+            box-shadow: none;
+        }
+
+        .topbar-copy {
+            font-size: 0.88rem;
+            color: var(--text-soft);
+            font-weight: 600;
+        }
+
+        .hero-wrap {
+            max-width: 760px;
+            margin: 8vh auto 0;
+            text-align: left;
+        }
+
+        .hero-kicker {
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.55rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 4vw, 3.35rem);
+            line-height: 1.02;
+            letter-spacing: 0;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .hero-body {
+            max-width: 580px;
+            margin-top: 0.8rem;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-soft);
+        }
+
+        div[data-testid="stForm"] {
+            background: var(--panel-bg);
+            border: 1px solid rgba(231, 222, 206, 0.95);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            margin-top: 1.45rem;
+            padding: 0.8rem 0.85rem 0.65rem;
+        }
+
+        div[data-testid="stTextArea"] textarea {
+            background: transparent;
+            color: var(--text-main);
+            border: none;
+            box-shadow: none;
+            font-size: 1rem;
+        }
+
+        div[data-testid="stTextArea"] textarea::placeholder {
+            color: #9a9185;
+        }
+
+        .composer-note {
+            font-size: 0.8rem;
+            color: var(--text-soft);
+            margin: 0.35rem 0 0.2rem;
+        }
+
+        div[data-testid="stFormSubmitButton"] button {
+            border-radius: 999px;
+            background: linear-gradient(180deg, #dba163 0%, #c9843d 100%);
+            color: #fffdf8;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-weight: 700;
+        }
+
+        .suggestions-row {
+            margin-top: 1rem;
+        }
+
+        div[data-testid="stChatMessage"] {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(231, 222, 206, 0.95);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 0.25rem 0.45rem;
+            margin-bottom: 1rem;
+        }
+
+        .main-shell [data-testid="stChatMessageContent"] p,
+        .main-shell [data-testid="stChatMessageContent"] li {
+            line-height: 1.7;
+        }
+
+        .panel-shell {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(231, 222, 206, 0.95);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            padding: 0.9rem;
+        }
+
+        .panel-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-soft);
+            margin-bottom: 0.85rem;
+        }
+
+        .status-card {
+            border-radius: 18px;
+            padding: 0.9rem 0.95rem;
+            margin-bottom: 0.9rem;
+            border: 1px solid rgba(231, 222, 206, 0.95);
+            background: var(--panel-strong);
+        }
+
+        .status-card strong {
+            display: block;
+            margin-bottom: 0.2rem;
+            color: var(--text-main);
+        }
+
+        .status-card p {
+            margin: 0;
+            color: var(--text-soft);
+            line-height: 1.6;
+            font-size: 0.88rem;
+        }
+
+        .status-pass {
+            background: linear-gradient(180deg, #f9fff9 0%, #eef8f0 100%);
+        }
+
+        .status-warn {
+            background: linear-gradient(180deg, #fffaf2 0%, #fdf2e2 100%);
+        }
+
+        .status-error {
+            background: linear-gradient(180deg, #fff7f6 0%, #fdeaea 100%);
+        }
+
+        .evidence-meta {
+            font-size: 0.78rem;
+            color: var(--text-soft);
+            line-height: 1.55;
+        }
+
+        .empty-panel {
+            border: 1px dashed rgba(201, 132, 61, 0.28);
+            border-radius: 18px;
+            padding: 1rem;
+            color: var(--text-soft);
+            line-height: 1.65;
+            background: rgba(255, 255, 255, 0.62);
+        }
+
+        [data-testid="stChatInput"] {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(231, 222, 206, 0.95);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            padding: 0.15rem 0.3rem;
+        }
+
+        @media (max-width: 1100px) {
+            .hero-wrap {
+                margin-top: 2vh;
+            }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def init_session_state() -> None:
+    import streamlit as st
+
+    if "user_id" not in st.session_state:
+        st.session_state["user_id"] = None      # 登录前为None
+    if "agent" not in st.session_state:
+        pass                                     # 登录后才创建
+    if "conversation_store" not in st.session_state:
+        st.session_state["conversation_store"] = ConversationStore()
+    if "thread_counter" not in st.session_state:
+        st.session_state["thread_counter"] = 1
+    # ── 已登录但threads不存在 → 从持久化存储加载 ──
+    if "threads" not in st.session_state and st.session_state.get("user_id"):
+        _load_user_conversations(st.session_state["user_id"])
+        return
+    # ── 未登录且threads不存在 → 创建初始空线程 ──
+    if "threads" not in st.session_state:
+        thread_id = f"thread-{st.session_state['thread_counter']}"
+        st.session_state["threads"] = {thread_id: _make_thread(thread_id)}
+        st.session_state["thread_order"] = [thread_id]
+        st.session_state["active_thread_id"] = thread_id
+        st.session_state["thread_counter"] += 1
+
+if __name__ == "__main__":
+    # 判断是否在Streamlit运行环境中
+    _is_streamlit = False
+    try:
+        import streamlit.runtime.scriptrunner as _st_runner
+        if _st_runner.get_script_run_ctx():
+            _is_streamlit = True
+    except Exception:
+        pass
+
+    # 检查sys.argv是否有streamlit特征（防止scriptrunner异常误判）
+    import sys
+    if not _is_streamlit and any("streamlit" in arg for arg in sys.argv):
+        _is_streamlit = True
+
+    if _is_streamlit:
+        run_streamlit()
+    else:
+        run_cli()

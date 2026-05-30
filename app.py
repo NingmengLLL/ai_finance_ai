@@ -450,6 +450,114 @@ def init_session_state() -> None:
         st.session_state["active_thread_id"] = thread_id
         st.session_state["thread_counter"] += 1
 
+def render_sidebar() -> tuple[str, str | None]:
+    import streamlit as st
+
+    with st.sidebar:
+        st.markdown(
+            f"""
+            <div class="sidebar-brand">
+                <div class="brand-mark"></div>
+                <div class="brand-copy">
+                    <div class="brand-title">{APP_NAME}</div>
+                    <div class="brand-meta">本地研究工作台</div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        if st.button("+ 新对话", use_container_width=True, key="new-chat"):
+            return ("new", None)
+
+        st.markdown('<div class="section-label">最近记录</div>', unsafe_allow_html=True)
+        threads = st.session_state["threads"]
+        active_id = st.session_state["active_thread_id"]
+        visible_threads = [
+            threads[thread_id]
+            for thread_id in st.session_state["thread_order"]
+            if threads[thread_id]["messages"] or thread_id == active_id
+        ]
+        if not visible_threads:
+            st.markdown('<div class="sidebar-empty">暂无会话记录。</div>', unsafe_allow_html=True)
+        else:
+            for thread in visible_threads[:8]:
+                is_active = thread["id"] == active_id
+                button_type = "primary" if is_active else "secondary"
+                if st.button(
+                    thread["title"],
+                    key=f"thread-{thread['id']}",
+                    use_container_width=True,
+                    type=button_type,
+                ):
+                    return ("switch", thread["id"])
+                updated_text = f"已更新 {thread['updated_at']}" if thread["updated_at"] else "就绪"
+                st.markdown(f'<div class="recent-meta">{updated_text}</div>', unsafe_allow_html=True)
+
+        st.markdown(
+            """
+            <div class="sidebar-footer">
+                <div class="footer-pill"><span class="footer-dot"></span>已连接</div>
+                <div class="footer-pill">中文 / 英文</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        user_id = st.session_state.get("user_id", "")
+        st.markdown(f'<div class="recent-meta">当前用户：{user_id}</div>', unsafe_allow_html=True)
+        if st.button("切换用户", key="switch-user"):
+            return ("logout", None)
+    return ("stay", None)
+
+
+def render_empty_state() -> str | None:
+    import streamlit as st
+
+    left, center, right = st.columns([0.14, 0.72, 0.14])
+    with center:
+        st.markdown(
+            f"""
+            <div class="hero-wrap">
+                <div class="hero-kicker">研究工作台</div>
+                <h1 class="hero-title">{APP_NAME}</h1>
+                <div class="hero-body">{APP_SUBTITLE}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        with st.form("hero-composer", clear_on_submit=True):
+            query = st.text_area(
+                "提示词",
+                height=140,
+                placeholder="想了解点什么？",
+                label_visibility="collapsed",
+            )
+            st.markdown(
+                '<div class="composer-note">按 Enter 发送，Shift+Enter 换行。</div>',
+                unsafe_allow_html=True,
+            )
+            submitted = st.form_submit_button("发送")
+        st.markdown('<div class="suggestions-row"></div>', unsafe_allow_html=True)
+        suggestion_cols = st.columns(len(RECOMMENDED_QUERIES))
+        for index, suggestion in enumerate(RECOMMENDED_QUERIES):
+            with suggestion_cols[index]:
+                if st.button(suggestion, use_container_width=True, key=f"suggestion-{index}"):
+                    return suggestion
+        if submitted and query.strip():
+            return query.strip()
+    return None
+
+
+def render_messages(messages: list[dict[str, str]]) -> None:
+    import streamlit as st
+
+    st.markdown('<div class="main-shell">', unsafe_allow_html=True)
+    for message in messages:
+        role = message.get("role", "assistant")
+        with st.chat_message(role):
+            st.markdown(message.get("content", ""))
+    st.markdown("</div>", unsafe_allow_html=True)
+
 if __name__ == "__main__":
     # 判断是否在Streamlit运行环境中
     _is_streamlit = False
